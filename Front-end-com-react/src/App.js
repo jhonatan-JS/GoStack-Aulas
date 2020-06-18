@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
+import React, { useState, useEffect } from 'react';
+import api from './services/api';
 
-import backImage from './assets/back.jpeg'
+import Header from './components/Header';
 
 import './App.css';
 
 function App() {
-    const [projects, setProjects] = useState(['Desenvolvimento de app', 'Front-end web']);
+    const [projects, setProjects] = useState([]);
 
-    function handleAddProject() {
+    useEffect(() => {
+        api.get('projects').then(response =>{
+            setProjects(response.data);
+        })
+    }, []);
 
-        setProjects([...projects, `Novo projeto ${Date.now()}`]); 
-        console.log(projects);
+    async function handleAddProject() {
+        //setProjects([...projects, `Novo projeto ${Date.now()}`]); 
+
+       const response = await api.post('projects',{
+            title: `Novo projeto ${Date.now()}`,
+            owner: "Jhonatan santos"
+        });
+        const project = response.data;
+
+        setProjects([...projects, project]);
     }
 
     return (
         <>
         <Header title="Projects" /> 
 
-        <img width={350} src={backImage} alt="background"/>
-
             <ul>
-                {projects.map(project => <li key={project}>{project}</li>)}
+                {projects.map(project => <li key={project.id}>{project.title}</li>)}
             </ul>
 
             <button type="button" onClick={handleAddProject}>Adicionar projeto</button>
