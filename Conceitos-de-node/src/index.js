@@ -56,6 +56,7 @@ const projects = [];
     app.put('/projects/:id',  (request, response) => {
         const { id } = request.params;
         const {title, owner} = request.body;
+        console.log(request);
 
         const projectIndex = projects.findIndex(project => project.id === id);
 
@@ -73,7 +74,6 @@ const projects = [];
 
         return response.json(project);
     });
-
     app.delete('/projects/:id', (request, response) => {
         const { id } = request.params;
 
